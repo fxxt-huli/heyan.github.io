@@ -1,0 +1,156 @@
+#include <stdio.h>
+#include <windows.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+#include <string.h>
+#define A 1002672
+
+struct city//定义结构体
+{
+    char type_name[100];//物流名字
+    char cfcity_name[100];//出发城市
+    char ddcity_name[100];//到达城市
+    char way_type[100];//运送方式
+    float time;//时间
+    float h_price;//重物价格
+    float h_discount;//重物折扣
+    float l_price;//轻物价格
+    float l_discount;//轻物折扣
+};
+struct city c[A];
+
+//void cz()
+//{
+//    int i,j,k;
+//    int s[100000];
+//    char city_dou[1000][50];
+//    for(i=0,j=0;i<1002672;i++)
+//    {
+//        if(strcmp(cxcity_name,c[i].cfcity_name)==0)
+//        {
+//            s[j]=i;
+//            j++;
+//            if(j==1)
+//            {
+//                strcpy(c[i].type_name,city_dou[1]);
+//                printf("%s\n",city_dou[1]);
+//            }
+//            else
+//            {
+//                for(k=1;k<j;k++)//查重
+//                {
+//                    if((strcmp(c[i].type_name,city_dou[k]))==0)
+//                    {
+//                        break;
+//                    }
+//                }
+//                if(k>=j)
+//                {
+//                  strcpy(city_dou[k],c[i].type_name);
+//                  printf("%s\t",city_dou[k]);
+//                }
+//            }
+//        }
+//    }
+//}
+int main()
+{
+    double total_time,total_time1,total_time2,total_time3;
+    clock_t start,start1,start2,start3,finish,finish1,finish2,finish3;
+    FILE *fp;
+    char filename[40];
+    int i;
+    /*录入文本文档*/
+    printf("输入文件名:");
+    start=clock();
+    gets(filename);
+    fp=fopen(filename,"r");
+    fseek(fp,72L, SEEK_SET);  /*从第二行开始读取*/
+    for(i=0;i<100;i++)
+    {
+        fscanf(fp,"%s %s %s %f %s %f %f %f %f",c[i].type_name,c[i].cfcity_name,c[i].ddcity_name,
+               &c[i].time,c[i].way_type,&c[i].h_price,&c[i].h_discount,&c[i].l_price,&c[i].l_discount);
+    }
+    fclose(fp);
+    finish=clock();
+    total_time=(double)(finish-start)/CLOCKS_PER_SEC;
+    printf("录入文档所消耗时间为%f seconds\n",total_time);
+//    //for(i=0;i<100;i++)
+//    //{
+//         printf("%s\t%s\t%s\t%s\t%f\t%f\t%f\t%f\t%f\n",c[i].type_name,c[i].cfcity_name,c[i].ddcity_name,c[i].way_type,
+//               c[i].time,c[i].h_price,c[i].h_discount,c[i].l_price,c[i].l_discount);
+//    }
+    /*功能1.输入所在城市，打印出所在城市的物流公司*/
+    start1=clock();
+    printf("请输入您要查询的城市:\n");
+    char cxcity_name[60];
+    scanf("%s",cxcity_name);
+    printf("您输入的城市所在的物流公司有:\n");
+    for(i=0;i<100;i++)
+    {
+        if(strcmp(cxcity_name,c[i].cfcity_name)==0)
+        {
+            printf("%s\n",c[i].type_name);
+        }
+    }
+    finish1=clock();
+    total_time1=(double)(finish1-start1)/CLOCKS_PER_SEC;
+    printf("功能1所消耗时间为%f seconds\n",total_time1);
+    printf("__________________________________________\n");
+
+    /*功能2.在功能1的基础上输入包裹到达城市，打印出不同物流公司相应的物流价格*/
+    start2=clock();
+    printf("请输入包裹到达城市:\n");
+    char bgcity_name[60];
+    scanf("%s",bgcity_name);
+    printf("不同物流公司相应的价格为:\n");
+    for(i=0;i<100;i++)
+    {
+        if(strcmp(cxcity_name,c[i].cfcity_name)==0)
+        {
+            if(strcmp(bgcity_name,c[i].ddcity_name)==0)
+            {
+                printf("%s在您选择的%s类型下，重货:%f\t 轻货:%f\n",
+                   c[i].type_name,c[i].way_type,c[i].h_price*c[i].h_discount/10,c[i].l_price*c[i].l_discount/10);
+            }
+        }
+    }
+    finish2=clock();
+    total_time2=(double)(finish2-start2)/CLOCKS_PER_SEC;
+    printf("功能2所消耗时间为%f seconds\n",total_time2);
+    printf("__________________________________________\n");
+
+    /*功能3.在功能2的基础上输入包裹重量和类型(重货or轻货)，打印出相应的运送价格*/
+    start3=clock();
+    printf("请输入包裹重量:\n");
+    float weight;
+    scanf("%f",&weight);
+    printf("请输入包裹类型:\n");
+    char type[10];
+    scanf("%s",type);
+    printf("包裹相应运送价格为:\n");
+    for(i=0;i<100;i++)
+    {
+        if(strcmp(cxcity_name,c[i].cfcity_name)==0)
+        {
+            if(strcmp(bgcity_name,c[i].ddcity_name)==0)
+            {
+                if(strcmp(type,"重货")==0)
+                {
+                    printf("%s在您选择的%s类型下,运送价格为:%f\n",c[i].type_name,c[i].way_type,weight*c[i].h_price*c[i].h_discount/10);
+                }
+            }
+        }
+        else if(strcmp(type,"轻货")==0)
+            printf("%s在您选择的%s类型下,运送价格为:%f\n",c[i].type_name,c[i].way_type,weight*c[i].l_price*c[i].l_discount/10);
+        else
+            printf("输入错误！");
+    }
+    finish3=clock();
+    total_time3=(double)(finish3-start3)/CLOCKS_PER_SEC;
+    printf("功能3所消耗时间为%f seconds\n",total_time3);
+    printf("__________________________________________\n");
+    system("Pause");
+    return 0;
+}

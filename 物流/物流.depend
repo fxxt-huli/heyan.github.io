@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1519574217 source:d:\users\administrator\desktop\物流\物流\main.c
+	<stdio.h>
+	<windows.h>
+	<stdlib.h>
+	<time.h>
+	<math.h>
+	<string.h>
+
